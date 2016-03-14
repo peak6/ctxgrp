@@ -65,13 +65,23 @@ func (g *Group) HEAD(path string, hf HandlerFunc) {
 }
 
 func mkpath(pre string, post string) string {
-	if len(post) > 0 && post[0] != '/' {
-		if pre[len(pre)-1] != '/' {
+	if pre == "" {
+		if post == "" {
+			panic("Cannot map empty path")
+		}
+		if post[0] != '/' {
 			panic("Path must start with /")
 		}
+		return post
 	}
-	if pre != "" && pre[len(pre)-1] == '/' {
-		return pre + post[1:] // pre ended in a /, drop post /
+	if pre[0] != '/' {
+		panic("Path must start with /")
+	}
+	if post == "" {
+		return pre
+	}
+	if post[0] == '/' && pre[len(pre)-1] == '/' {
+		return pre + post[1:]
 	} else {
 		return pre + post
 	}
