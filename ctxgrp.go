@@ -40,10 +40,10 @@ func (g *Group) NewGroup(path string) *Group {
 func (g *Group) Handle(method string, path string, hf Handler) {
 	g.r.Handle(method, path, context.Background(), g.mw.Then(hf))
 }
-func HttpHandler(h http.Handler) Handler {
-	return HandlerFunc(func(_ context.Context, w http.ResponseWriter, r *http.Request) {
+func HttpHandler(h http.Handler) HandlerFunc {
+	return func(_ context.Context, w http.ResponseWriter, r *http.Request) {
 		h.ServeHTTP(w, r)
-	})
+	}
 }
 func (g *Group) GET(path string, hf HandlerFunc) {
 	g.Handle("GET", path, hf)
