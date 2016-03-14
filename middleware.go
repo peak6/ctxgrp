@@ -1,7 +1,7 @@
 package ctxgrp
 
 type Middleware []MiddlewareFunc
-type MiddlewareFunc func(hf Handler) Handler
+type MiddlewareFunc func(hf Handler) HandlerFunc
 
 func copyof(src Middleware) Middleware {
 	dest := make(Middleware, len(src))
