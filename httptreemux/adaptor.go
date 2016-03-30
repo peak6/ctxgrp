@@ -1,17 +1,20 @@
 package httptreemux
 
 import (
+	"net/http"
+
 	"github.com/dimfeld/httptreemux"
 	"github.com/peak6/ctxgrp"
 	"golang.org/x/net/context"
-	"net/http"
 )
 
+// TreeMuxAdaptor combines ctxgrp.Group and httptreemux.TreeMux
 type TreeMuxAdaptor struct {
 	*httptreemux.TreeMux
 	*ctxgrp.Group
 }
 
+// New constructs a new TreeMuxAdaptor
 func New() *TreeMuxAdaptor {
 	var ret TreeMuxAdaptor
 	ret.TreeMux = httptreemux.New()
@@ -19,21 +22,22 @@ func New() *TreeMuxAdaptor {
 	return &ret
 }
 
+// Handle impments ctxgroup.RouterAdaptor
 func (tma *TreeMuxAdaptor) Handle(method string, path string, ctx context.Context, h ctxgrp.Handler) {
 	tma.TreeMux.Handle(
 		method,
 		path,
 		func(w http.ResponseWriter, r *http.Request, p map[string]string) {
-			h.ServeHTTP(MapContext{ctx, p}, w, r)
+			h.ServeHTTP(mapContext{ctx, p}, w, r)
 		})
 }
 
-type MapContext struct {
+type mapContext struct {
 	context.Context
 	m map[string]string
 }
 
-func (m MapContext) Value(key interface{}) interface{} {
+func (m mapContext) Value(key interface{}) interface{} {
 	if k, ok := key.(string); ok {
 		if v, ok := m.m[k]; ok {
 			return v
