@@ -7,7 +7,7 @@ Usage:
 
 (work in progress example) 
 
-`
+```go
 import (
   "net/http"
   "github.com/peak6/ctxgrp"
@@ -36,4 +36,4 @@ func fooHandler(ctx context.Context, w http.ResponseWriter, r *http.Request){
 func otherHandler(ctx context.Context, w http.ResponseWriter, r *http.Request){
   w.Write([]byte("other handler"))
 }
-`
+```
