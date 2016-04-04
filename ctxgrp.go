@@ -1,8 +1,9 @@
 package ctxgrp
 
 import (
-	"golang.org/x/net/context"
 	"net/http"
+
+	"golang.org/x/net/context"
 )
 
 type RouterAdaptor interface {
@@ -29,8 +30,8 @@ func NewGroup(r RouterAdaptor, path string) *Group {
 	return &Group{r, path, nil}
 }
 
-func (g *Group) Use(fn ...MiddlewareFunc) *Group {
-	return &Group{g.r, g.p, g.mw.Use(fn...)}
+func (g *Group) Use(cons ...Constructor) *Group {
+	return &Group{g.r, g.p, g.mw.Use(cons...)}
 }
 
 func (g *Group) NewGroup(path string) *Group {
